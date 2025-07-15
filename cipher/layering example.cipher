@@ -1,0 +1,59 @@
+Create the cipher for a different example of layering using the following Cipher as a guide, with different ids e.g. different Trader, Account, Symbol.   Please fix any issues with the Cipher.
+
+// Ensure the supporting nodes exist
+MERGE (t:Trader {trader_id: "TR200", name: "Charlie"})
+MERGE (a:Account {account_id: "AC200"})
+MERGE (t)-[:USES]->(a)
+MERGE (s:Security {symbol: "TSLA", cusip: "88160R101", instrument_type: "Equity"})
+
+// Create 3 transactions simulating a layering sequence
+CREATE (tx1:Transaction {
+  transaction_id: "TX201",
+  timestamp: datetime("2025-07-11T13:00:00"),
+  side: "SELL",
+  price: 260.50,
+  quantity: 500,
+  venue: "NASDAQ",
+  order_type: "LIMIT"
+})
+
+CREATE (tx2:Transaction {
+  transaction_id: "TX202",
+  timestamp: datetime("2025-07-11T13:00:10"),
+  side: "SELL",
+  price: 260.45,
+  quantity: 500,
+  venue: "NASDAQ",
+  order_type: "LIMIT"
+})
+
+CREATE (tx3:Transaction {
+  transaction_id: "TX203",
+  timestamp: datetime("2025-07-11T13:00:20"),
+  side: "BUY",
+  price: 260.40,
+  quantity: 2000,
+  venue: "NASDAQ",
+  order_type: "MARKET"
+})
+
+// Link account to transactions
+CREATE (a)-[:PLACED]->(tx1)
+CREATE (a)-[:PLACED]->(tx2)
+CREATE (a)-[:PLACED]->(tx3)
+
+// Link transactions to security
+CREATE (tx1)-[:INVOLVES]->(s)
+CREATE (tx2)-[:INVOLVES]->(s)
+CREATE (tx3)-[:INVOLVES]->(s)
+
+// Link transactions in sequence (layering pattern)
+CREATE (tx1)-[:CONNECTED_TO {reason: "layering"}]->(tx2)
+CREATE (tx2)-[:CONNECTED_TO {reason: "layering"}]->(tx3)
+
+// Link to trader (optional for redundancy)
+CREATE (tx1)-[:PLACED_BY]->(t)
+CREATE (tx2)-[:PLACED_BY]->(t)
+CREATE (tx3)-[:PLACED_BY]->(t)
+
+RETURN tx1, tx2, tx3

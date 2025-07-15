@@ -1,0 +1,9 @@
+There is a relationship between a Trader Node and an Account Node with a USES relationship.   (:Trader)-[:USES}->(:Account)
+
+There is a relationship between an Account node and a Transaction  Node with a PLACED relationship.  (:Account)-[:PLACED]->(:Transaction).
+
+There is a relationship between a Transaction Node and a Trader Node with a PLACED_BY relationship.  (:Transaction)-[:PLACED_BY]->(:Trader)
+
+There is a relationship between a Transaction node and the   Security node with a INVOLVES relationship. (:Transaction)-[:INVOLVES]->(:Security)
+
+Transactions that are related can have CONNECTED_TO relationship. A Transaction Node has a relationship with another Transaction Node with CONNECTED_TO relationship.   (:Transaction)-[:CONNECTED_TO]->(:Transaction).  This could be a sign that there may be layering. However, the layering should also check Transactions that are not linked with the CONNECTED_TO relationship.

@@ -1,0 +1,47 @@
+Create the cipher for a different example of spoofing using the following Cipher as a guide, with different ids e.g. different Trader, Account, Symbol.   Please fix any issues with the Cipher.
+
+// Ensure supporting entities exist
+MERGE (t:Trader {trader_id: "TR300", name: "Dana"})
+MERGE (a:Account {account_id: "AC300"})
+MERGE (t)-[:USES]->(a)
+MERGE (s:Security {symbol: "NFLX", cusip: "64110L106", instrument_type: "Equity"})
+
+// Create spoofing transactions
+CREATE (tx1:Transaction {
+  transaction_id: "TX301",
+  timestamp: datetime("2025-07-11T14:00:00"),
+  side: "BUY",
+  price: 470.50,
+  quantity: 10000,
+  venue: "NASDAQ",
+  order_type: "LIMIT",
+  status: "CANCELLED"
+})
+
+CREATE (tx2:Transaction {
+  transaction_id: "TX302",
+  timestamp: datetime("2025-07-11T14:00:10"),
+  side: "SELL",
+  price: 470.30,
+  quantity: 10000,
+  venue: "NASDAQ",
+  order_type: "MARKET",
+  status: "EXECUTED"
+})
+
+// Link account to transactions
+CREATE (a)-[:PLACED]->(tx1)
+CREATE (a)-[:PLACED]->(tx2)
+
+// Link transactions to security
+CREATE (tx1)-[:INVOLVES]->(s)
+CREATE (tx2)-[:INVOLVES]->(s)
+
+// Link transactions to trader
+CREATE (tx1)-[:PLACED_BY]->(t)
+CREATE (tx2)-[:PLACED_BY]->(t)
+
+// Indicate sequence and spoofing intent
+CREATE (tx1)-[:CONNECTED_TO {reason: "spoofing"}]->(tx2)
+
+RETURN tx1, tx2
