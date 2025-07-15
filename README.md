@@ -46,46 +46,109 @@ This project leverages **Graph Database technology** and **Agentic AI** to solve
 ### Agentic AI Workflow
 
 ```mermaid
-graph TB
-    subgraph "Data Sources"
-        A[Trading Data] --> B[Neo4j GraphDB]
-        C[Market Data] --> B
-        D[Account Data] --> B
+graph LR
+    subgraph DS ["📊 Data Sources Layer"]
+        direction TB
+        TD["💼 Trading Data<br/>• Orders<br/>• Executions<br/>• Cancellations"]
+        MD["📈 Market Data<br/>• Prices<br/>• Volumes<br/>• Timestamps"]
+        AD["🏦 Account Data<br/>• Trader Info<br/>• Account Details<br/>• Risk Profiles"]
     end
     
-    subgraph "AI Agents & Tools"
-        E[Surveillance Agent] --> F[Pattern Detector]
-        E --> G[Confidence Scorer]
-        E --> H[Escalation Manager]
+    subgraph DB ["🗄️ Graph Database"]
+        direction TB
+        NEO["🔗 Neo4j GraphDB<br/>• Nodes: Trader, Account,<br/>  Transaction, Security<br/>• Relationships: PLACED_BY,<br/>  PLACED, INVOLVES,<br/>  CONNECTED_TO"]
+    end
+    
+    subgraph AI ["🤖 AI Agents & Intelligence Layer"]
+        direction TB
         
-        F --> I[Spoofing Detector]
-        F --> J[Layering Detector]
-        F --> K[Volume Anomaly Detector]
+        subgraph SA ["🕵️ Surveillance Agent"]
+            direction TB
+            SAM["👁️ Monitor<br/>Continuous scanning<br/>of trading activity"]
+            SAA["🧠 Analyze<br/>Pattern recognition<br/>& anomaly detection"]
+            SAD["🎯 Decide<br/>Confidence scoring<br/>& severity assessment"]
+            SAE["📢 Escalate<br/>Alert generation<br/>& routing"]
+            
+            SAM --> SAA --> SAD --> SAE
+        end
         
-        L[NLP Agent] --> M[Query Translator]
-        L --> N[Schema Analyzer]
-        L --> O[Result Formatter]
+        subgraph PD ["🔍 Pattern Detection Tools"]
+            direction TB
+            SPD["🎭 Spoofing Detector<br/>• Large order placement<br/>• Quick cancellations<br/>• Market manipulation"]
+            LAD["🔄 Layering Detector<br/>• Multiple order levels<br/>• Connected transactions<br/>• False depth creation"]
+            VAD["📊 Volume Anomaly<br/>• Unusual patterns<br/>• Statistical outliers<br/>• Threshold violations"]
+        end
+        
+        subgraph NLP ["💬 NLP Agent"]
+            direction TB
+            QT["🔤 Query Translator<br/>Natural language<br/>to Cypher conversion"]
+            SC["📋 Schema Analyzer<br/>Database structure<br/>understanding"]
+            RF["📝 Result Formatter<br/>Human-readable<br/>output generation"]
+            
+            QT --> SC --> RF
+        end
     end
     
-    subgraph "Backend Services"
-        P[FastAPI Server] --> Q[Pattern Detection API]
-        P --> R[Monitoring API]
-        P --> S[Query Interface API]
-        P --> T[Dashboard API]
+    subgraph BE ["⚙️ Backend Services Layer"]
+        direction TB
+        
+        subgraph API ["🌐 FastAPI Server"]
+            direction TB
+            PDA["🔍 Pattern Detection API<br/>• Real-time monitoring<br/>• Historical analysis<br/>• Confidence scoring"]
+            MA["📊 Monitoring API<br/>• Agent status<br/>• System health<br/>• Configuration"]
+            QIA["💭 Query Interface API<br/>• NLP processing<br/>• Cypher execution<br/>• Result formatting"]
+            DA["📈 Dashboard API<br/>• Statistics aggregation<br/>• Live data feeds<br/>• Performance metrics"]
+        end
     end
     
-    subgraph "Frontend Application"
-        U[React Dashboard] --> V[Pattern Viewer]
-        U --> W[Query Interface]
-        U --> X[Monitoring Console]
-        U --> Y[Alert Manager]
+    subgraph FE ["🖥️ Frontend Application Layer"]
+        direction TB
+        
+        subgraph UI ["⚛️ React Dashboard"]
+            direction TB
+            PV["🎯 Pattern Viewer<br/>• Suspicious activity list<br/>• Detailed analysis<br/>• Network diagrams"]
+            QI["🗨️ Query Interface<br/>• Natural language input<br/>• Query results<br/>• Cypher display"]
+            MC["⚙️ Monitoring Console<br/>• Agent controls<br/>• System configuration<br/>• Real-time status"]
+            AM["🚨 Alert Manager<br/>• Alert dashboard<br/>• Status tracking<br/>• Historical data"]
+        end
     end
     
-    B --> E
-    B --> L
-    E --> P
-    L --> P
-    P --> U
+    %% Data Flow Connections
+    TD --> NEO
+    MD --> NEO
+    AD --> NEO
+    
+    NEO -->|"🔄 Continuous<br/>Data Access"| SAM
+    NEO -->|"📊 Schema<br/>Discovery"| SC
+    
+    SAA --> SPD
+    SAA --> LAD
+    SAA --> VAD
+    
+    SPD -->|"⚠️ Patterns<br/>Detected"| SAD
+    LAD -->|"⚠️ Patterns<br/>Detected"| SAD
+    VAD -->|"⚠️ Patterns<br/>Detected"| SAD
+    
+    SAE --> PDA
+    RF --> QIA
+    
+    PDA -->|"📊 Pattern<br/>Data"| PV
+    MA -->|"📈 System<br/>Status"| MC
+    QIA -->|"💭 Query<br/>Results"| QI
+    DA -->|"📊 Dashboard<br/>Data"| AM
+    
+    %% Styling
+    classDef dataSource fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef database fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
+    classDef agent fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef backend fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef frontend fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    
+    class TD,MD,AD dataSource
+    class NEO database
+    class SAM,SAA,SAD,SAE,SPD,LAD,VAD,QT,SC,RF agent
+    class PDA,MA,QIA,DA backend
+    class PV,QI,MC,AM frontend
 ```
 
 ### Agent Architecture Details
