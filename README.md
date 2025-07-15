@@ -76,7 +76,6 @@ graph LR
             direction TB
             SPD["🎭 Spoofing Detector<br/>• Large order placement<br/>• Quick cancellations<br/>• Market manipulation"]
             LAD["🔄 Layering Detector<br/>• Multiple order levels<br/>• Connected transactions<br/>• False depth creation"]
-            VAD["📊 Volume Anomaly<br/>• Unusual patterns<br/>• Statistical outliers<br/>• Threshold violations"]
         end
         
         subgraph NLP ["💬 NLP Agent"]
@@ -123,11 +122,9 @@ graph LR
     
     SAA --> SPD
     SAA --> LAD
-    SAA --> VAD
     
     SPD -->|"⚠️ Patterns<br/>Detected"| SAD
     LAD -->|"⚠️ Patterns<br/>Detected"| SAD
-    VAD -->|"⚠️ Patterns<br/>Detected"| SAD
     
     SAE --> PDA
     RF --> QIA
@@ -146,7 +143,7 @@ graph LR
     
     class TD,MD,AD dataSource
     class NEO database
-    class SAM,SAA,SAD,SAE,SPD,LAD,VAD,QT,SC,RF agent
+    class SAM,SAA,SAD,SAE,SPD,LAD,QT,SC,RF agent
     class PDA,MA,QIA,DA backend
     class PV,QI,MC,AM frontend
 ```
@@ -195,8 +192,8 @@ graph LR
 
 | Node Type | Properties | Description |
 |-----------|------------|-------------|
-| **Trader** | `trader_id`, `name`, `firm`, `risk_score` | Individual traders in the system |
-| **Account** | `account_id`, `account_type`, `balance`, `status` | Trading accounts |
+| **Trader** | `trader_id`, `name` | Individual traders in the system |
+| **Account** | `account_id`, `account_type` | Trading accounts |
 | **Transaction** | `transaction_id`, `side`, `quantity`, `price`, `timestamp`, `status`, `venue` | Individual trading transactions |
 | **Security** | `symbol`, `cusip`, `instrument_type` | Financial instruments being traded |
 
